@@ -131,7 +131,7 @@ textarea.form__input {
 <body>
 
 <div style=" display: flex; align-items: center; justify-content: center;">
-  <form class="form" action="form.php" method="POST">
+  <form class="form" id="studentform" action="form.php" method="POST">
     <div class="form__title" style="background-color: rgb(232, 224, 224);">Student Details</div>
     <p class="form__desc">
       Please fill out the form below to sign up for a student account.
@@ -164,7 +164,7 @@ textarea.form__input {
     </div>
     <div class="form__item">
         <label for="mobilephone" class="form__label">Mobile Phone Number: </label>
-        <input type="text" class="form__input"  id="mobilephone" name="mobilephone" pattern="\d{3}[\-]\d{3}[\-]\d{4}" placeholder="XXX-XXX-XXXX" requried>
+        <input type="text" class="form__input"  id="mobilephone" name="mobilephone" pattern="\d{3}[\-]\d{3}[\-]\d{4}" placeholder="XXX-XXX-XXXX" required>
         <span class="form__error">eg: 010-123-5690</span>
     </div>
     <div class="form__item">

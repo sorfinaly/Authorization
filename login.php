@@ -14,7 +14,7 @@ if (isset($_POST['email'], $_POST['password'])) {
     $stmt->execute();
     $result = $stmt->get_result();
 
-    // Check if a row was returned
+    // Check if a row was returnedfetchStudentData()
     if ($result->num_rows == 1) {
         // Fetch the user's data
         $user = $result->fetch_assoc();
@@ -26,6 +26,20 @@ if (isset($_POST['email'], $_POST['password'])) {
             $_SESSION['user_email'] = $user['email'];
             $_SESSION['user_password'] = $user['password'];
 
+            $stmt = $mysqli->prepare("SELECT id FROM students WHERE login_id = ?");
+            $stmt->bind_param("i", $_SESSION['user_id']);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            
+            if ($result->num_rows == 1) {
+                $student_id = $result->fetch_assoc()['id'];
+                $_SESSION['student_id'] = $student_id; // Assuming you want to store student ID in session as well
+            }
+            // Display user ID for testing purposes
+            echo "User ID: " . $_SESSION['user_id'];
+            echo "Student ID: " . $_SESSION['student_id'];
+            // die();
+
             header("Location: student_details.php");
             exit();
         } else {
@@ -34,7 +48,7 @@ if (isset($_POST['email'], $_POST['password'])) {
         }
     } else {
         // No user found with the given email
-        $errorMessage = "Invalid email or password.";
+        $errorMessage = "Please register for an account.";
     }
 } else {
     // Email or password not provided
@@ -44,4 +58,5 @@ if (isset($_POST['email'], $_POST['password'])) {
 // If authentication fails or no credentials provided, redirect back to login page with error message
 echo "<script>alert('$errorMessage'); window.history.back();</script>";
 exit();
+
 ?>

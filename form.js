@@ -2,6 +2,7 @@
 // filename = form.js
 
 document.addEventListener("DOMContentLoaded", function() {
+
     document.querySelectorAll(".form__input, .form__textarea").forEach(function(input) {
         const errorMessage = input.nextElementSibling; // Select the next sibling element (error message) of the input
 
@@ -19,73 +20,70 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    function fetchStudentData() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('id');
+    function deleteStudent() {
+        // Perform AJAX request to delete student
+        fetch("crud.php?id=<?php echo $student['id']; ?>", {
+            method: "DELETE",
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.success) {
+                // Redirect to login page or do something else
+                window.location.href = "index.html";
+            } else {
+                // Deletion failed, log error or show message
+                alert("Deletion failed: Unable to delete student record.");
+            }
+        })
+        .catch(error => {
+            // AJAX request failed, log error or show message
+            alert("AJAX request failed: " + error);
+        });
+    }
 
-        fetch(`form.php?id=${id}`)
-            .then(response => response.json()) // Assuming the response is in JSON format
-            .then(data => {
-                // Process the fetched data
-                // You can manipulate the DOM to display the data as required
-                const studentDetailsContainer = document.getElementById('student-detailss');
     
-                // Clear previous content
-                studentDetailsContainer.innerHTML = '';
-    
-                // Create a container for student details
-                const detailsContainer = document.createElement('div');
-                detailsContainer.classList.add('detailss-container');
-    
-                // Loop through the fetched data and create detail items
-                data.forEach(student => {
-                    const detailItem = document.createElement('div');
-                    detailItem.classList.add('detail-item');
-                    detailItem.innerHTML = `
-                                <table>
-                                    <tr>
-                                        <td class="detail-label">Name:</td>
-                                        <td class="detail-value">${student.name}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="detail-label">Matric No:</td>
-                                        <td class="detail-value">${student.matricno}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="detail-label">Email:</td>
-                                        <td class="detail-value">${student.email}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="detail-label">Current Address:</td>
-                                        <td class="detail-value">${student.curraddress}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="detail-label">Home Address:</td>
-                                        <td class="detail-value">${student.homeaddress}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="detail-label">Mobile Phone:</td>
-                                        <td class="detail-value">${student.mobilephone}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="detail-label">Home Phone:</td>
-                                        <td class="detail-value">${student.homephone}</td>
-                                    </tr>
-                                </table>
-                            `;
+    function updateStudent() {
 
-                    detailsContainer.appendChild(detailItem);
-                });
+        let form = document.getElementById("studentform");
+        console.log("Form element:", form); // Check if form is correctly retrieved
+        if (!form) {
+            console.error("Form not found!");
+            return;
+        }
     
-                // Append the details container to the student details container
-                studentDetailsContainer.appendChild(detailsContainer);
-            })
-            .catch(error => console.error('Error fetching student data:', error));
+        var formData = new FormData(form);
+        
+        // Make sure to include the student ID in the form data
+        var studentId = "<?php echo $_GET['id']; ?>";
+        formData.append("id", studentId);
+    
+        // Make PUT request to update student record
+        fetch("crud.php", {
+            method: "PUT",
+            body: formData
+        })
+        .then(response => {
+            // Check if response is successful
+            if (response.ok) {
+                return response.json(); // Parse JSON response
+            } else {
+                throw new Error("Failed to update student record");
+            }
+        })
+        .then(data => {
+            // Handle successful response
+            console.log("Student record updated successfully:", data);
+            // Redirect to student details page
+            window.location.href = "student_details.php?id=" + studentId;
+        })
+        .catch(error => {
+            // Handle errors
+            console.error("Error updating student record:", error.message);
+            // Display error message to the user
+            alert("Failed to update student record. Please try again.");
+        });
     }
     
-
-    // Call the fetchStudentData function when the page loads
-    fetchStudentData();
 
     // Function to handle back button click event
     function back() {
@@ -93,6 +91,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Event listener for back button click
+    document.getElementById('update-btn').addEventListener('click', updateStudent);
+    document.getElementById('delete-btn').addEventListener('click', deleteStudent);
     document.getElementById('back-btn').addEventListener('click', back);
 });
 

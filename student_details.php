@@ -138,23 +138,16 @@ if (isset($_SESSION['user_email']) && isset($_SESSION['user_password'])) {
       <?php endif; ?>
     </div>
 
+    <!-- Buttons for Update and Delete -->
     <div class="form__item">
+      <button id="update-btn" class="form__btn">Update</button>
+      <button id="delete-btn" class="form__btn">Delete</button>
       <button id="back-btn" class="form__btn">Logout</button>
     </div>
   </div>
 </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  // Function to handle back button click event
-  function back() {
-    window.location.href = "index.html"; // Redirect to login page
-  }
-
-  // Event listener for back button click
-  document.getElementById('back-btn').addEventListener('click', back);
-});
-</script>
+<script src="form.js"></script>
 
 </body>
 </html>

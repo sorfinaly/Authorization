@@ -1,4 +1,5 @@
 <?php
+session_start();
 include 'db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -13,20 +14,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $mobilephone = validateInput($_POST["mobilephone"], '~^\d{3}-\d{3}-\d{4}$~', 'Invalid mobile phone number');
     $homephone = validateInput($_POST["homephone"], '~^\d{3}-\d{3}-\d{4}$~', 'Invalid home phone number');
 
+
+    $login_id = $_SESSION['user_id'];
+    echo "User ID: " . $_SESSION['user_id'];
+    echo "Student ID: " . $_SESSION['student_id'];
+    echo "Login ID: " . $login_id;
+
     // If there are no errors, save the data to the database
     if (empty($errors)) {
         // Prepare a SQL statement to insert data into the database
-        $stmt = $mysqli->prepare("INSERT INTO students (name, matricno, email, curraddress, homeaddress, mobilephone, homephone) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $mysqli->prepare("INSERT INTO students (name, matricno, email, curraddress, homeaddress, mobilephone, homephone, login_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         
         // Bind parameters to the prepared statement
-        $stmt->bind_param("sssssss", $name, $matricno, $email, $curraddress, $homeaddress, $mobilephone, $homephone);
+        $stmt->bind_param("sssssssi", $name, $matricno, $email, $curraddress, $homeaddress, $mobilephone, $homephone, $login_id);
         
         // Execute the prepared statement
         if ($stmt->execute()) {
             $inserted_id = $mysqli->insert_id;
 
             // Redirect to student_details.html with the ID parameter
-            header("Location: student_details.html?id=$inserted_id");
+            header("Location: student_details.php?id=$inserted_id");
 
             exit();
         } else {
