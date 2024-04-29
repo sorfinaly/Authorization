@@ -25,6 +25,7 @@ if (isset($_POST['email'], $_POST['password'])) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_email'] = $user['email'];
             $_SESSION['user_password'] = $user['password'];
+            $_SESSION['role_id'] = $user['role_id'];
 
             $stmt = $mysqli->prepare("SELECT id FROM students WHERE login_id = ?");
             $stmt->bind_param("i", $_SESSION['user_id']);
@@ -34,13 +35,27 @@ if (isset($_POST['email'], $_POST['password'])) {
             if ($result->num_rows == 1) {
                 $student_id = $result->fetch_assoc()['id'];
                 $_SESSION['student_id'] = $student_id; // Assuming you want to store student ID in session as well
+                header("Location: student_details.php?id=$student_id");
+                exit();
+            } else {
+                header("Location: form.html");
+            //     exit();
             }
             // Display user ID for testing purposes
             echo "User ID: " . $_SESSION['user_id'];
             echo "Student ID: " . $_SESSION['student_id'];
-            // die();
+            
 
-            header("Location: student_details.php");
+
+            if(($_SESSION['student_id']) == null){
+                header("Location: form.html");
+                exit();
+            } else {
+                header("Location: student_details.php?id=$student_id");
+                exit();
+            }
+
+            header("Location: student_details.php?id=$student_id");
             exit();
         } else {
             // Invalid password

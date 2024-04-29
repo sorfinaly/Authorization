@@ -10,7 +10,6 @@ if (isset($_SESSION['user_email']) && isset($_SESSION['user_password'])) {
     $email = $_SESSION['user_email'];
     $password = $_SESSION['user_password'];
 
-    // Fetch student details from the database based on the email
     $stmt = $mysqli->prepare("SELECT * FROM students WHERE email = ? OR id = ?");
     $stmt->bind_param("si", $email, $_GET['id']);
     $stmt->execute();
@@ -22,8 +21,10 @@ if (isset($_SESSION['user_email']) && isset($_SESSION['user_password'])) {
         $student = $result->fetch_assoc();
     } elseif ($result->num_rows == 0){
         // No student found with the given email
+        // echo "<script>alert('No student found with the given email'); </script>";
         header("Location: form.html");
         exit();
+        
     } 
 } else {
     // Session email not set, redirect to login page
@@ -144,10 +145,50 @@ if (isset($_SESSION['user_email']) && isset($_SESSION['user_password'])) {
       <button id="delete-btn" class="form__btn">Delete</button>
       <button id="back-btn" class="form__btn">Logout</button>
     </div>
-  </div>
+  </div> 
 </div>
 
-<script src="form.js"></script>
+
+<script>
+document.getElementById('update-btn').addEventListener('click', function() {
+    // Redirect to the form.html page with the ID parameter
+    var id = <?php echo isset($_GET['id']) ? $_GET['id'] : 'null'; ?>;
+    if (id !== null) {
+        window.location.href = 'form.html?id=' + id;
+    } else {
+        alert("No student ID found.");
+    }
+});
+
+document.getElementById('delete-btn').addEventListener('click', function() {
+        // Perform AJAX request to delete student
+        fetch("crud.php?id=<?php echo $student['id']; ?>", {
+            method: "DELETE",
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.success) {
+                // Redirect to login page or do something else
+                window.location.href = "index.html";
+            } else {
+                // Deletion failed, log error or show message
+                alert("Deletion failed: Unable to delete student record.");
+            }
+        })
+        .catch(error => {
+            // AJAX request failed, log error or show message
+            alert("AJAX request failed: " + error);
+        });
+    
+  });
+
+    // Function to handle back button click event
+    document.getElementById('back-btn').addEventListener('click', function() {
+        window.location.href = "index.html";
+    });
+
+  
+</script>
 
 </body>
 </html>
