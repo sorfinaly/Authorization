@@ -28,11 +28,15 @@ This PHP script starts a session and includes a database connection file. If a P
 
 After successful login, this file will use the key-in email that user entered during logging. If the email already been registered in the database, student's record such as name, matrix number, address and more will be displayed by searching database using student's email. If student's email are not found in the database, student will be prompt to fill in the form in the `form.html`. This page will displayed student's record along with button update, delete and logout. 
 
-### 7. form.html
+### 7. crud.php
+
+This file is containing various method such as insert, update delete and validation. This server-side will handle request from js if the student click on certain request. 
+
+### 8. form.html
 
 This file contains the user interface for the student details form. It includes input fields for the user's name, matriculation number, email, addresses, and phone numbers. Each input field has a `pattern` attribute for basic client-side validation. Upon submission, the form sends the data to `form.php` for further validation and processing.
 
-### 7. logout.php
+### 9. logout.php
 
 This file is to clear the session data then redirect user to `index.html`
 
