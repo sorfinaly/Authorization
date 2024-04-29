@@ -184,8 +184,25 @@ document.getElementById('delete-btn').addEventListener('click', function() {
 
     // Function to handle back button click event
     document.getElementById('back-btn').addEventListener('click', function() {
-        window.location.href = "index.html";
+    // Clear session data
+    fetch('logout.php', {
+        method: 'POST',
+        credentials: 'same-origin' // Include cookies in the request
+    })
+    .then(response => {
+        if (response.ok) {
+            // Session cleared successfully
+            window.location.href = "index.html"; // Redirect to login page
+        } else {
+            // Error handling
+            console.error('Failed to clear session data');
+        }
+    })
+    .catch(error => {
+        // Error handling
+        console.error('Failed to clear session data:', error);
     });
+});
 
   
 </script>
