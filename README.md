@@ -56,5 +56,6 @@ This file is to clear the session data then redirect user to `index.html`
 
 ## Error Handling
 
-If there are validation errors, the error messages are displayed next to the respective input fields on `form.html`, providing clear feedback to the user. The form data is not cleared, allowing the user to correct the errors and resubmit the form. If the input is successfully validated, the sanitized data is displayed in a tabular format on the same page.
+If there are validation errors, the error messages are displayed next to the respective input fields on `form.html`, providing clear feedback to the user. The form data is not cleared, allowing the user to correct the errors and resubmit the form. If the input is successfully validated, the sanitized data is displayed in a tabular format on the same page.<br>
+
 ![image](https://github.com/sorfinaly/XSS-CSRF/assets/85787305/5dc7add5-982d-459c-ae92-efce9bfd6704)
